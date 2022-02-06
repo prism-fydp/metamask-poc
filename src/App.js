@@ -1,22 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+
+import { useMetaMask } from 'metamask-react';
 
 function App() {
+  const { status, connect, ethereum } = useMetaMask();
+
+  console.log(status);
+
+  if (status === "connected") {
+    const transactionParameters = {
+      to: '0x0000000000000000000000000000000000000000',
+      from: ethereum.selectedAddress,
+    };
+
+    ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [transactionParameters],
+    });
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <header style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="App-header">
+        <p>Status: {status}</p>
+        <div
+          onClick={connect}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            color: 'black',
+            cursor: 'pointer',
+          }}
         >
-          Learn React
-        </a>
+          <p style={{ margin: 25 }}>Connect</p>
+        </div>
       </header>
     </div>
   );
